@@ -58,7 +58,8 @@ contract TopOfBlockAuction {
         for (uint i = 0; i < allShareMatchBids.length; i++) {
             bid = allShareMatchBids[i];
             bytes memory feeBid = Suave.confidentialRetrieve(bid.id, "key1");
-            uint64 feeBidInt = abi.decode(feeBid);
+            // TODO - we need to be passing in the address here too, so we can gate reduced fees to a specific address
+            uint64 feeBidInt = abi.decode(feeBid, (uint64));
             if (feeBidInt > winningFee) {
                 winningFee = feeBidInt;
                 // auctionWinner = ...
@@ -68,8 +69,8 @@ contract TopOfBlockAuction {
         return
             abi.encodeWithSelector(
                 this.emitAuctionWinner.selector,
-                swapperAddr,
-                swapperFee
+                auctionWinner,
+                winningFee
             );
     }
 }
