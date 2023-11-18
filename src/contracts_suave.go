@@ -390,6 +390,6 @@ func (b *suaveRuntime) submitBundleJsonRPC(url string, method string, params []b
 
 
 // TODO - actually make an api query and return user data here
-func (b *suaveRuntime) getExternalUserData(swapperAddr common.Address) (uint64, error) {
+func (b *suaveRuntime) getUserDataFromApi(swapperAddr common.Address) (uint64, error) {
 	return 1, nil
 }
