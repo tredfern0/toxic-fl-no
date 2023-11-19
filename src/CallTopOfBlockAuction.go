@@ -53,17 +53,18 @@ func main() {
 		panic(err)
 	}
 
-	//feeBid = 18000;
-	//feeBidBytes, _ = json.Marshal(feeBid)
-    //result, err = contract.SendTransaction("privateStoreBid", []interface{}{}, feeBidBytes)
 
-	//if err != nil {
-	//	panic(err)
-	//}
-	//receipt, err = result.Wait()
-	//if err != nil {
-	//	panic(err)
-	//}
+	feeBid = uint64(18000);
+	//feeBidBytes, _ := json.Marshal(feeBid)
+    result, err = contract.SendTransaction("privateStoreBid", []interface{}{feeBid}, nil)
+
+	if err != nil {
+		panic(err)
+	}
+	receipt, err = result.Wait()
+	if err != nil {
+		panic(err)
+	}
 
     result, err = contract.SendTransaction("settleAuction", []interface{}{}, nil)
 
