@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"crypto/ecdsa"
 	"fmt"
 
@@ -42,9 +41,9 @@ func main() {
     //receipt := contract.SendTransaction("precompileApiCall", []interface{}{addr}, nil)
 
     // 1.5%
-	feeBid := 15000;
-	feeBidBytes, _ := json.Marshal(feeBid)
-    result, err = contract.SendTransaction("privateStoreBid", []interface{}{}, feeBidBytes)
+	feeBid := uint64(15000);
+	//feeBidBytes, _ := json.Marshal(feeBid)
+    result, err = contract.SendTransaction("privateStoreBid", []interface{}{feeBid}, nil)
 
 	if err != nil {
 		panic(err)
@@ -53,6 +52,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	//feeBid = 18000;
+	//feeBidBytes, _ = json.Marshal(feeBid)
+    //result, err = contract.SendTransaction("privateStoreBid", []interface{}{}, feeBidBytes)
+
+	//if err != nil {
+	//	panic(err)
+	//}
+	//receipt, err = result.Wait()
+	//if err != nil {
+	//	panic(err)
+	//}
 
     result, err = contract.SendTransaction("settleAuction", []interface{}{}, nil)
 

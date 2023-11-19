@@ -18,9 +18,9 @@ contract TopOfBlockAuction {
     }
 
     // slightly modified from ConfidentialStore example...
-    function privateStoreBid() external payable returns (bytes memory) {
+    function privateStoreBid(uint64 feeBid) public payable returns (bytes memory) {
         // User will need to pass in the max fee they're willing to bid here...
-        bytes memory feeBid = Suave.confidentialInputs();
+        // bytes memory feeBid = Suave.confidentialInputs();
         // Don't need to cast here because we have to store it in bytes anyways
         // uint64 feeBidInt = abi.decode(feeBid);
 
@@ -36,7 +36,7 @@ contract TopOfBlockAuction {
 
         //Suave.confidentialStore(bid.id, "key1", abi.encode(1));
         // function confidentialStore(BidId bidId, string memory key, bytes memory data1) internal view
-        Suave.confidentialStore(bid.id, "key1", feeBid);
+        Suave.confidentialStore(bid.id, "key1", abi.encode(feeBid));
 
         //Unnecessary?
         //bytes memory value = Suave.confidentialRetrieve(bid.id, "key1");
@@ -46,7 +46,7 @@ contract TopOfBlockAuction {
         return abi.encodeWithSelector(this.nullCallback.selector);
     }
 
-    function settleAuction() external payable returns (bytes memory) {
+    function settleAuction() public payable returns (bytes memory) {
         // Very basic logic - iterate over list of bids and see what is highest one
         uint64 winningFee = 0;
         address auctionWinner = address(0);
@@ -55,11 +55,15 @@ contract TopOfBlockAuction {
             10,
             "topOfBlockAuction"
         );
+
         for (uint i = 0; i < allShareMatchBids.length; i++) {
             bid = allShareMatchBids[i];
+            //Suave.BidId b = bid.id;
             bytes memory feeBid = Suave.confidentialRetrieve(bid.id, "key1");
-            // TODO - we need to be passing in the address here too, so we can gate reduced fees to a specific address
+            //    //bytes memory feeBid2 = Suave.confidentialRetrieve(bid.id, "key1");
+            //    // TODO - we need to be passing in the address here too, so we can gate reduced fees to a specific address
             uint64 feeBidInt = abi.decode(feeBid, (uint64));
+
             if (feeBidInt > winningFee) {
                 winningFee = feeBidInt;
                 // auctionWinner = ...

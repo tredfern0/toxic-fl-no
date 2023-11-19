@@ -18,8 +18,8 @@ library UniV4Hook {
             abi.encodeWithSignature(isSolverSig, swapperAddr)
         );
         bool isSolver = abi.decode(output, (bool));
-        // 1% is default
-        fee = 10000;
+        // 1% is default - we'll subtract though, this should actually represent fee reduction
+        fee = 0;
         if (isSolver) {
             // Reduce to .3% if they're a solver
             fee = 3000;
