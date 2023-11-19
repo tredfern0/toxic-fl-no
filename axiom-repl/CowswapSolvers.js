@@ -6,25 +6,22 @@
 //
 
 
-const eventSchema = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822";
+const cowswapAddr = "0x9008d19f58aabd9ed0d60971565aa8510560ab41";
+// keccak of this event: Settlement (index_topic_1 address solver)
+const eventSchema = "0x40338ce1a7c49204f0099533b1e9a7ee0a3d261f84974ab7af36105b8c4e9db4";
+let receipt = getReceipt(txBlockNumber, txIdx);
+// access the address that emitted the log event at index 0
+let logAddr = receipt.log(0).address();
 
-let swapSum = constant(0);
+// Need to confirm the cowswap contract was the one that emitted this...
+checkEqual(constant(cowswapAddr), logAddr.toCircuitValue());
 
-for (let i = 0; i < 2; i++) {
-    let dat = txList[i];
-    let receipt = getReceipt(dat["txBlockNumber"], dat["txIdx"]);
-    // access the address that emitted the log event at index 0
-    let logAddr = receipt.log(0).address();
+// access the topic at index 1 of the log event at index 0 and check it has schema eventSchema
+// because `address` is indexed in the event, this corresponds to `address`
+let solverAddress = receipt.log(logIdx).topic(0, eventSchema); 
 
-    // Need to confirm the cowswap contract was the one that emitted this...
-    //checkEqual(constant(cowswapAddr), logAddr.toCircuitValue());
+addToCallback(solverAddress);
 
-    // access the topic at index 1 of the log event at index 0 and check it has schema eventSchema
-    // because `address` is indexed in the event, this corresponds to `address`
-    let swapAmount = receipt.log(0).topic(0, eventSchema);
-    swapSum = add(swapSum, swapAmount.toCircuitValue());
-}
-addToCallback(swapSum);
 
 // https://goerli.etherscan.io/tx/0xce3148dc2cd5188fdf1d7d72ab4d4b0ee994a58262b630e3e788fd5ac7c1e2f4#eventlog
 // Expected output address: 0xb98e94C06660A639A951B64FE9EF295fc2fABE1d

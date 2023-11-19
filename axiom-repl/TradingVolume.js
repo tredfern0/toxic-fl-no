@@ -2,6 +2,7 @@
 // So confirm every transaction in array was initiated by user, sum them up and return the sum
 
 
+const uniPoolAddr = "0x28cee28a7c4b4022ac92685c07d2f33ab1a0e122";
 const eventSchema = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822";
 
 let swapSum = constant(0);
@@ -12,8 +13,8 @@ for (let i = 0; i < 2; i++) {
     // access the address that emitted the log event at index 0
     let logAddr = receipt.log(0).address();
 
-    // Need to confirm the cowswap contract was the one that emitted this...
-    //checkEqual(constant(cowswapAddr), logAddr.toCircuitValue());
+    // Checkinng for activity on one pool...
+    checkEqual(constant(uniPoolAddr), logAddr.toCircuitValue());
 
     // access the topic at index 1 of the log event at index 0 and check it has schema eventSchema
     // because `address` is indexed in the event, this corresponds to `address`
